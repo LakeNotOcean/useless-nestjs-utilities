@@ -1,8 +1,8 @@
-import { ValidationOptions, ValidationArguments } from 'class-validator';
-import { ObjectLiteral, EntityTarget, FindOptionsWhere } from 'typeorm';
+import { ValidationArguments, ValidationOptions } from 'class-validator';
+import { EntityTarget, FindOptionsWhere, ObjectLiteral } from 'typeorm';
 import { BaseDbCheckDecorator, BaseDbCheckValidation } from './base.decorator';
 
-export function NotExists<T extends ObjectLiteral>(
+export function NotExistsDbDec<T extends ObjectLiteral>(
   columnName: keyof T,
   findOptions: FindOptionsWhere<T>,
   entity: EntityTarget<T>,

@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { Observable, catchError, finalize, tap } from 'rxjs';
 import { Exception } from 'src/exceptions/base.exceptions';
+import { InternalException } from 'src/exceptions/server.exceptions';
 import { DataSource, QueryRunner } from 'typeorm';
 import { DbException } from './db.exception';
-import { InternalException } from 'src/exceptions/server.exceptions';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {

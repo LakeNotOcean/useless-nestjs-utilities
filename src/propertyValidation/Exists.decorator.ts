@@ -3,17 +3,16 @@ import { EntityTarget, FindOptionsWhere, ObjectLiteral } from 'typeorm';
 import { BaseDbCheckDecorator, BaseDbCheckValidation } from './base.decorator';
 
 export function ExistsDbDec<T extends ObjectLiteral>(
-  columnName: keyof T,
-  findOptions: FindOptionsWhere<T>,
   entity: EntityTarget<T>,
+  columnName: keyof T,
   exceptionThrowFunc?: (value: any) => never,
   validationOptions?: ValidationOptions,
 ) {
   return BaseDbCheckDecorator(
     ExistsValidation<T>,
-    findOptions,
     entity,
-    [columnName],
+    columnName,
+    [],
     exceptionThrowFunc,
     validationOptions,
   );
@@ -29,25 +28,15 @@ export class ExistsValidation<
     this.setDbParams(validationArguments);
     this.logger.log({
       message: 'check if exists',
-      findOptions: this.findOptions,
+      findOptions: this.columnName,
       entity: this.entity,
     });
-    const dbResult = await this.runnerManager.findOneBy(
-      this.entity,
-      this.findOptions,
-    );
-    const columnName = validationArguments.constraints[
-      validationArguments.constraints.length - 1
-    ] as string;
-    const isExists =
-      dbResult &&
-      dbResult[columnName] != null &&
-      dbResult[columnName] != undefined
-        ? true
-        : false;
+    const isExists = await this.runnerManager.exists(this.entity, {
+      [this.columnName]: value,
+    } as FindOptionsWhere<T>);
     if (!isExists) {
       if (this.exceptionThrowFunc) {
-        this.exceptionThrowFunc(columnName);
+        this.exceptionThrowFunc(this.columnName);
       }
       return false;
     }

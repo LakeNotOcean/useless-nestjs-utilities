@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger, Scope } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import {
   ValidationArguments,
   ValidationDecoratorOptions,
@@ -6,20 +7,14 @@ import {
   ValidatorConstraintInterface,
   registerDecorator,
 } from 'class-validator';
-import {
-  EntityManager,
-  EntityTarget,
-  FindOptionsWhere,
-  ObjectLiteral,
-} from 'typeorm';
+import { EntityManager, EntityTarget, ObjectLiteral } from 'typeorm';
 import { ValidationParamsException } from '../exceptions/server.exceptions';
-import { REQUEST } from '@nestjs/core';
 
 export function BaseDbCheckDecorator<T extends ObjectLiteral>(
   // eslint-disable-next-line @typescript-eslint/ban-types
   validator: Function | ValidatorConstraintInterface,
-  findOptions: FindOptionsWhere<T>,
   entity: EntityTarget<T>,
+  columnName: keyof T,
   constraints: any[],
   exceptionThrowFunc?: (value: any) => never,
   validationOptions?: ValidationOptions,
@@ -28,7 +23,7 @@ export function BaseDbCheckDecorator<T extends ObjectLiteral>(
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
-      constraints: [findOptions, entity, exceptionThrowFunc, ...constraints],
+      constraints: [entity, columnName, exceptionThrowFunc, ...constraints],
       options: validationOptions,
       async: true,
       validator: validator,
@@ -42,8 +37,8 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
 {
   protected readonly logger = new Logger(this.constructor['name']);
   protected runnerManager: EntityManager;
-  protected findOptions: FindOptionsWhere<T>;
   protected entity: EntityTarget<T>;
+  protected columnName: keyof T;
   protected exceptionThrowFunc?: (value: any) => never | undefined;
 
   constructor(@Inject(REQUEST) protected request: any) {}
@@ -54,15 +49,15 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
         message: 'runner manager is not provided',
       });
     }
-    const [findOptions, entity, exceptionThrowFunc] =
+    const [entity, columnName, exceptionThrowFunc] =
       validationArguments.constraints as [
-        FindOptionsWhere<T>,
         EntityTarget<T>,
+        keyof T,
         (value: any) => never | undefined,
       ];
-    if (!findOptions) {
+    if (!columnName) {
       throw new ValidationParamsException({
-        message: 'findOptions is not provided',
+        message: 'columnName is not provided',
       });
     }
     if (!entity) {
@@ -70,9 +65,9 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
         message: 'entity is not provided',
       });
     }
-    this.findOptions = findOptions;
     this.entity = entity;
     this.exceptionThrowFunc = exceptionThrowFunc;
+    this.columnName = this.columnName;
   }
   abstract validate(
     value: any,

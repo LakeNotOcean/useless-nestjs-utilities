@@ -1,5 +1,4 @@
-import { Inject, Injectable, Logger, Scope } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import { Logger } from '@nestjs/common';
 import {
   ValidationArguments,
   ValidationDecoratorOptions,
@@ -7,6 +6,7 @@ import {
   ValidatorConstraintInterface,
   registerDecorator,
 } from 'class-validator';
+import { QUERY_RUNNER_CONTEXT } from 'src/typeORMInterceptors/injectQueryRunnerTo.interceptor';
 import { EntityManager, EntityTarget, ObjectLiteral } from 'typeorm';
 import { ValidationParamsException } from '../exceptions/server.exceptions';
 
@@ -31,7 +31,6 @@ export function BaseDbCheckDecorator<T extends ObjectLiteral>(
   };
 }
 
-@Injectable({ scope: Scope.REQUEST })
 export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
   implements ValidatorConstraintInterface
 {
@@ -41,9 +40,11 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
   protected columnName: keyof T;
   protected exceptionThrowFunc?: (value: any) => never | undefined;
 
-  constructor(@Inject(REQUEST) protected request: any) {}
+  constructor() {}
   protected setDbParams(validationArguments: ValidationArguments) {
-    this.runnerManager = this.request?.queryRunnerManager as EntityManager;
+    this.runnerManager = validationArguments.object[
+      QUERY_RUNNER_CONTEXT
+    ] as EntityManager;
     if (!this.runnerManager) {
       throw new ValidationParamsException({
         message: 'runner manager is not provided',

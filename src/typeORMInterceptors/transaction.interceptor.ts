@@ -13,7 +13,10 @@ import { DbException } from './db.exception';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private type?: 'query' | 'body' | 'param',
+  ) {}
   async intercept(
     context: ExecutionContext,
     next: CallHandler,
@@ -21,7 +24,7 @@ export class TransactionInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest();
     const queryRunner: QueryRunner = await this.dbInit();
 
-    req.queryRunnerManager = queryRunner.manager;
+    req.context.queryRunnerManager = queryRunner.manager;
 
     return next.handle().pipe(
       catchError(async error => {

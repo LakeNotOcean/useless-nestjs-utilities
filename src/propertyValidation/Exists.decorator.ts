@@ -1,8 +1,12 @@
-import { ValidationArguments, ValidationOptions } from 'class-validator';
+import {
+  ValidationArguments,
+  ValidationOptions,
+  ValidatorConstraint,
+} from 'class-validator';
 import { EntityTarget, FindOptionsWhere, ObjectLiteral } from 'typeorm';
 import { BaseDbCheckDecorator, BaseDbCheckValidation } from './base.decorator';
 
-export function ExistsDbDec<T extends ObjectLiteral>(
+export function IsExistsDb<T extends ObjectLiteral>(
   entity: EntityTarget<T>,
   columnName: keyof T,
   exceptionThrowFunc?: (value: any) => never,
@@ -18,9 +22,13 @@ export function ExistsDbDec<T extends ObjectLiteral>(
   );
 }
 
+@ValidatorConstraint({ name: 'IsExistsDb', async: true })
 export class ExistsValidation<
   T extends ObjectLiteral,
 > extends BaseDbCheckValidation<T> {
+  constructor() {
+    super();
+  }
   async validate(
     value: any,
     validationArguments: ValidationArguments,

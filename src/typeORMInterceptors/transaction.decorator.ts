@@ -4,6 +4,6 @@ import { EntityManager } from 'typeorm';
 export const TransactionManager = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest();
-    return req.queryRunnerManager as EntityManager;
+    return req.context.queryRunnerManager as EntityManager;
   },
 );

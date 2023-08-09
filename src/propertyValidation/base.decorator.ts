@@ -6,8 +6,12 @@ import {
   ValidatorConstraintInterface,
   registerDecorator,
 } from 'class-validator';
-import { QUERY_RUNNER_CONTEXT } from 'src/typeORMInterceptors/injectQueryRunnerTo.interceptor';
-import { EntityManager, EntityTarget, ObjectLiteral } from 'typeorm';
+import {
+  DataSource,
+  EntityManager,
+  EntityTarget,
+  ObjectLiteral,
+} from 'typeorm';
 import { ValidationParamsException } from '../exceptions/server.exceptions';
 
 export function BaseDbCheckDecorator<T extends ObjectLiteral>(
@@ -40,16 +44,10 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
   protected columnName: keyof T;
   protected exceptionThrowFunc?: (value: any) => never | undefined;
 
-  constructor() {}
+  constructor(readonly dataSource: DataSource) {
+    this.runnerManager = dataSource.createQueryRunner().manager;
+  }
   protected setDbParams(validationArguments: ValidationArguments) {
-    this.runnerManager = validationArguments.object[
-      QUERY_RUNNER_CONTEXT
-    ] as EntityManager;
-    if (!this.runnerManager) {
-      throw new ValidationParamsException({
-        message: 'runner manager is not provided',
-      });
-    }
     const [entity, columnName, exceptionThrowFunc] =
       validationArguments.constraints as [
         EntityTarget<T>,
@@ -68,7 +66,7 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
     }
     this.entity = entity;
     this.exceptionThrowFunc = exceptionThrowFunc;
-    this.columnName = this.columnName;
+    this.columnName = columnName;
   }
   abstract validate(
     value: any,

@@ -3,7 +3,12 @@ import {
   ValidationOptions,
   ValidatorConstraint,
 } from 'class-validator';
-import { EntityTarget, FindOptionsWhere, ObjectLiteral } from 'typeorm';
+import {
+  DataSource,
+  EntityTarget,
+  FindManyOptions,
+  ObjectLiteral,
+} from 'typeorm';
 import { BaseDbCheckDecorator, BaseDbCheckValidation } from './base.decorator';
 
 export function IsExistsDb<T extends ObjectLiteral>(
@@ -13,7 +18,7 @@ export function IsExistsDb<T extends ObjectLiteral>(
   validationOptions?: ValidationOptions,
 ) {
   return BaseDbCheckDecorator(
-    ExistsValidation<T>,
+    NotExistsValidation<T>,
     entity,
     columnName,
     [],
@@ -23,22 +28,25 @@ export function IsExistsDb<T extends ObjectLiteral>(
 }
 
 @ValidatorConstraint({ name: 'IsNotExistsDb', async: true })
-export class ExistsValidation<
+export class NotExistsValidation<
   T extends ObjectLiteral,
 > extends BaseDbCheckValidation<T> {
+  constructor(dataSource: DataSource) {
+    super(dataSource);
+  }
   async validate(
     value: any,
     validationArguments: ValidationArguments,
   ): Promise<boolean> {
     this.setDbParams(validationArguments);
     this.logger.log({
-      message: 'check if exists',
-      findOptions: this.columnName,
+      message: 'check if not exists',
+      columnName: this.columnName,
       entity: this.entity,
     });
     const isExists = await this.runnerManager.exists(this.entity, {
-      [this.columnName]: value,
-    } as FindOptionsWhere<T>);
+      where: { [this.columnName]: value },
+    } as FindManyOptions<T>);
     if (isExists) {
       if (this.exceptionThrowFunc) {
         this.exceptionThrowFunc(this.columnName);

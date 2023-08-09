@@ -6,6 +6,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable, catchError, finalize, tap } from 'rxjs';
+import { QUERY_RUNNER_CONTEXT } from 'src/constants';
 import { Exception } from 'src/exceptions/base.exceptions';
 import { InternalException } from 'src/exceptions/server.exceptions';
 import { DataSource, QueryRunner } from 'typeorm';
@@ -13,10 +14,7 @@ import { DbException } from './db.exception';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
-  constructor(
-    private readonly dataSource: DataSource,
-    private type?: 'query' | 'body' | 'param',
-  ) {}
+  constructor(private readonly dataSource: DataSource) {}
   async intercept(
     context: ExecutionContext,
     next: CallHandler,
@@ -24,7 +22,7 @@ export class TransactionInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest();
     const queryRunner: QueryRunner = await this.dbInit();
 
-    req.context.queryRunnerManager = queryRunner.manager;
+    req[QUERY_RUNNER_CONTEXT] = queryRunner.manager;
 
     return next.handle().pipe(
       catchError(async error => {

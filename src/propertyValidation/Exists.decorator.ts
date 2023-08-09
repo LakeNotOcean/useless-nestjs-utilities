@@ -3,7 +3,12 @@ import {
   ValidationOptions,
   ValidatorConstraint,
 } from 'class-validator';
-import { EntityTarget, FindOptionsWhere, ObjectLiteral } from 'typeorm';
+import {
+  DataSource,
+  EntityTarget,
+  FindManyOptions,
+  ObjectLiteral,
+} from 'typeorm';
 import { BaseDbCheckDecorator, BaseDbCheckValidation } from './base.decorator';
 
 export function IsExistsDb<T extends ObjectLiteral>(
@@ -26,8 +31,8 @@ export function IsExistsDb<T extends ObjectLiteral>(
 export class ExistsValidation<
   T extends ObjectLiteral,
 > extends BaseDbCheckValidation<T> {
-  constructor() {
-    super();
+  constructor(dataSource: DataSource) {
+    super(dataSource);
   }
   async validate(
     value: any,
@@ -36,12 +41,12 @@ export class ExistsValidation<
     this.setDbParams(validationArguments);
     this.logger.log({
       message: 'check if exists',
-      findOptions: this.columnName,
+      columnName: this.columnName,
       entity: this.entity,
     });
     const isExists = await this.runnerManager.exists(this.entity, {
-      [this.columnName]: value,
-    } as FindOptionsWhere<T>);
+      where: { [this.columnName]: value },
+    } as FindManyOptions<T>);
     if (!isExists) {
       if (this.exceptionThrowFunc) {
         this.exceptionThrowFunc(this.columnName);

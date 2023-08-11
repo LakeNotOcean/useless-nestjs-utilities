@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import {
   ValidationArguments,
   ValidationDecoratorOptions,
@@ -38,7 +37,6 @@ export function BaseDbCheckDecorator<T extends ObjectLiteral>(
 export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
   implements ValidatorConstraintInterface
 {
-  protected readonly logger = new Logger(this.constructor['name']);
   protected runnerManager: EntityManager;
   protected entity: EntityTarget<T>;
   protected columnName: keyof T;

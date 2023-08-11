@@ -1,11 +1,11 @@
 import { Allow } from 'class-validator';
 import { EntityManager } from 'typeorm';
 
-export class ContextAwareDto<Body, Params> {
+export class ContextAwareDto<Body, Query> {
   @Allow()
   context?: {
     body: Body;
-    params: Params;
+    query: Query;
     user?: any;
     runnerManager?: EntityManager;
   };

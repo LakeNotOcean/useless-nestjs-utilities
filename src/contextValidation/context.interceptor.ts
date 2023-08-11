@@ -1,21 +1,50 @@
-import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Inject,
+  NestInterceptor,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { CUSTOM_CONTEXT, QUERY_RUNNER_CONTEXT } from 'src/constants';
-import { EntityManager } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { ContextAwareDto } from './context.aware.dto';
 
-export class ContextInterceptor<T1, T2> implements NestInterceptor {
-  intercept(
+export abstract class ContextInterceptor<Body, Query>
+  implements NestInterceptor
+{
+  protected context: ContextAwareDto<Body, Query>;
+  protected setContext(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest();
+    this.context = {
+      body: request.body as Body,
+      query: request.params as Query,
+      user: request.user,
+    } as ContextAwareDto<Body, Query>;
+  }
+  abstract intercept(
     context: ExecutionContext,
     next: CallHandler<any>,
-  ): Observable<any> | Promise<Observable<any>> {
-    const request = context.switchToHttp().getRequest();
-    request[CUSTOM_CONTEXT] = {
-      body: request.body as T1,
-      params: request.params as T2,
-      user: request.user,
-      transactionManager: request[QUERY_RUNNER_CONTEXT] as EntityManager,
-    } as ContextAwareDto<T1, T2>;
-    return next.handle();
+  ): Promise<Observable<any>>;
+}
+
+export abstract class ContextTransactionInteceptor<
+  Body,
+  Query,
+> extends ContextInterceptor<Body, Query> {
+  @Inject()
+  protected readonly dataSource: DataSource;
+  constructor() {
+    super();
   }
+  protected setContext(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest();
+    this.context = {
+      body: request.body as Body,
+      query: request.query as Query,
+      user: request.user,
+    } as ContextAwareDto<Body, Query>;
+  }
+  abstract intercept(
+    context: ExecutionContext,
+    next: CallHandler<any>,
+  ): Promise<Observable<any>>;
 }

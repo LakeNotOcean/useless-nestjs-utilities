@@ -1,10 +1,10 @@
 import { NestedKeyOf } from './types';
 
-export type contextBodyParams<Body, Params> = {
+export type contextBodyQuery<Body, Query> = {
   body: Body;
-  params: Params;
+  query: Query;
 };
 
-export type contextMapping<Body, Params> = NestedKeyOf<
-  contextBodyParams<Body, Params>
+export type contextMapping<Body, Query> = NestedKeyOf<
+  contextBodyQuery<Body, Query>
 >;

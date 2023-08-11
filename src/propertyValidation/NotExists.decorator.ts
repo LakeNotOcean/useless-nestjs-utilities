@@ -39,11 +39,7 @@ export class NotExistsValidation<
     validationArguments: ValidationArguments,
   ): Promise<boolean> {
     this.setDbParams(validationArguments);
-    this.logger.log({
-      message: 'check if not exists',
-      columnName: this.columnName,
-      entity: this.entity,
-    });
+
     const isExists = await this.runnerManager.exists(this.entity, {
       where: { [this.columnName]: value },
     } as FindManyOptions<T>);

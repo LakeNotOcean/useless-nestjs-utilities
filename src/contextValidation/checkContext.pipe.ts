@@ -1,34 +1,33 @@
-import { Injectable } from '@nestjs/common';
-import { ValidationParamsException } from 'src/exceptions/server.exceptions';
-import { contextBodyParams, contextMapping } from 'src/types/context.types';
+import { CallHandler, ExecutionContext, Injectable } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { contextBodyQuery, contextMapping } from 'src/types/context.types';
 import { getObjectByPath } from 'src/types/types';
-import { BaseValidationContextPipe } from './base.pipe';
+import { ContextInterceptor } from './context.interceptor';
 
 @Injectable()
-export class ContextValidationPipe<
+export class ContextValidationInteceptor<
   Body,
-  Params,
-> extends BaseValidationContextPipe<Body, Params> {
+  Query,
+> extends ContextInterceptor<Body, Query> {
   constructor(
-    private contextOptions: contextMapping<Body, Params>[],
+    private contextOptions: contextMapping<Body, Query>[],
     private compFunc: (...args: any[]) => boolean,
   ) {
     super();
   }
-  async transform(value: any) {
-    this.setContextInfo(value);
-    if (!this.contextInfo.context) {
-      throw new ValidationParamsException({
-        message: 'context is not provided',
-      });
-    }
-    return this.compFunc(
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler<any>,
+  ): Promise<Observable<any>> {
+    this.setContext(context);
+    this.compFunc(
       ...this.contextOptions.map(option =>
-        getObjectByPath<contextBodyParams<Body, Params>>(
-          this.contextInfo as contextBodyParams<Body, Params>,
+        getObjectByPath<contextBodyQuery<Body, Query>>(
+          this.context as contextBodyQuery<Body, Query>,
           option,
         ),
       ),
     );
+    return next.handle();
   }
 }

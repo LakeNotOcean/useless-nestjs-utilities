@@ -1,19 +1,19 @@
 import { FindOptionsWhere } from 'typeorm';
-import { contextBodyParams, contextMapping } from './context.types';
+import { contextBodyQuery, contextMapping } from './context.types';
 import { getObjectByPath } from './types';
 
-export type rawFindOptions<Entity extends object, Body, Params> = {
-  [P in keyof Entity]: contextMapping<Body, Params>;
+export type rawFindOptions<Entity extends object, Body, Query> = {
+  [P in keyof Entity]?: contextMapping<Body, Query>;
 };
 
-export function getFindOptionsWhere<Entity extends object, Body, Params>(
-  options: rawFindOptions<Entity, Body, Params>,
-  context: contextBodyParams<Body, Params>,
+export function getFindOptionsWhere<Entity extends object, Body, Query>(
+  options: rawFindOptions<Entity, Body, Query>,
+  context: contextBodyQuery<Body, Query>,
 ) {
   const entityObject = {} as Entity;
   for (const key in options) {
     entityObject[key as string] = getObjectByPath<
-      contextBodyParams<Body, Params>
+      contextBodyQuery<Body, Query>
     >(context, options[key]);
   }
   return entityObject as FindOptionsWhere<Entity>;

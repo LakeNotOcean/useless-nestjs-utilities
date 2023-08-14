@@ -1,9 +1,5 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  Inject,
-  NestInterceptor,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { DataSource } from 'typeorm';
 import { ContextAwareDto } from './context.aware.dto';
@@ -30,9 +26,10 @@ export abstract class ContextTransactionInteceptor<
   Body,
   Query,
 > extends ContextInterceptor<Body, Query> {
-  @Inject()
-  protected readonly dataSource: DataSource;
-  constructor() {
+  constructor(
+    protected readonly dataSource: DataSource,
+    protected readonly reflector: Reflector,
+  ) {
     super();
   }
   protected setContext(context: ExecutionContext) {

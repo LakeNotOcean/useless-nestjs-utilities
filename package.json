@@ -1,21 +1,25 @@
 {
-  "name": "nestjs_db_validation_decorators",
+  "name": "useless_nestjs_utilities",
   "version": "1.0.0",
-  "description": "DTO validation decorators using database queries",
+  "description": "Useless decorators, validators for  NestJS and TopeORM",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf dist",
-    "build": "tsc",
+    "build": "tsc --build",
     "prepublish": "npm run build",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "keywords": [
     "NestJS",
+    "TypeORM",
     "validation",
     "decorator",
+    "interceptor",
+    "exception",
+    "error handling",
     "dto"
   ],
   "author": "Nevsky Vladislav",

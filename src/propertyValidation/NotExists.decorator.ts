@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { BaseDbCheckDecorator, BaseDbCheckValidation } from './base.decorator';
 
-export function IsExistsDb<T extends ObjectLiteral>(
+export function IsNotExistsDb<T extends ObjectLiteral>(
   entity: EntityTarget<T>,
   columnName: keyof T,
   exceptionThrowFunc?: (value: any) => never,

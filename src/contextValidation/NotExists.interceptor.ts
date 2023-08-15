@@ -12,7 +12,7 @@ import { DataSource, EntityTarget } from 'typeorm';
 import { ContextTransactionInteceptor } from './context.interceptor';
 
 const NOT_EXIST_VALIDATION_OPTIONS = 'not_exist_validation_options';
-export const ExistsValidationOptions = <Entity extends object, Body, Query>(
+export const NotExistsValidationOptions = <Entity extends object, Body, Query>(
   entity: EntityTarget<Entity>,
   findOptions: rawFindOptions<Entity, Body, Query>,
 ) => SetMetadata(NOT_EXIST_VALIDATION_OPTIONS, { entity, findOptions });
@@ -20,8 +20,8 @@ export const ExistsValidationOptions = <Entity extends object, Body, Query>(
 @Injectable()
 export class NotExistValidationInteceptor<
   Entity extends object,
-  Body,
-  Query,
+  Body extends object,
+  Query extends object,
 > extends ContextTransactionInteceptor<Body, Query> {
   private entity: EntityTarget<Entity>;
   private findOptions: rawFindOptions<Entity, Body, Query>;

@@ -1,7 +1,7 @@
 import { Allow } from 'class-validator';
 import { EntityManager } from 'typeorm';
 
-export class ContextAwareDto<Body, Query> {
+export class ContextAwareDto<Body extends object, Query extends object> {
   @Allow()
   context?: {
     body: Body;

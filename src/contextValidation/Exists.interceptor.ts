@@ -26,8 +26,8 @@ export const ExistsValidationOptions = <Entity extends object, Body, Query>(
 @Injectable()
 export class ExistValidationInteceptor<
   Entity extends object,
-  Body,
-  Query,
+  Body extends object,
+  Query extends object,
 > extends ContextTransactionInteceptor<Body, Query> {
   private entity: EntityTarget<Entity>;
   private findOptions: rawFindOptions<Entity, Body, Query>;

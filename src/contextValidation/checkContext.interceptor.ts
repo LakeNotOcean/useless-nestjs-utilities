@@ -6,12 +6,12 @@ import { ContextInterceptor } from './context.interceptor';
 
 @Injectable()
 export class ContextValidationInteceptor<
-  Body,
-  Query,
+  Body extends object,
+  Query extends object,
 > extends ContextInterceptor<Body, Query> {
   constructor(
     private contextOptions: contextMapping<Body, Query>[],
-    private compFunc: (...args: any[]) => boolean,
+    private compFunc: (...args: any[]) => void,
   ) {
     super();
   }

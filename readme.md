@@ -6,7 +6,7 @@ Library for NestJS, that includes mechanisms for handling exceptions, decorators
 
 ## Installation
 
-TODO
+SOON)))
 
 ## Handling exceptions
 
@@ -18,6 +18,15 @@ The package provides a module for error handling - **ExceptionsModule**. How it 
 - `ClientException` has code 400
 - `ServerException` has code 500
 - `BussinessException` has code 422
+
+First of all set a **BaseInterceptor** when starting the application to catch all IternalExeptions:
+
+```typescript
+app.useGlobalInterceptors(
+	new ClassSerializerInterceptor(app.get(Reflector)),
+	new BaseInterceptor(),
+);
+```
 
 To handle exceptions correctly, import the module, synchronously or asynchronously, using **formatters** as needed:
 
@@ -105,7 +114,24 @@ throw new TranslateException('userAlreadyExists', {});
 
 ## Transaction manager
 
-TODO
+**TransactionIterceptor** creates an EntityManager object from [TypeORM](https://www.npmjs.com/package/typeorm), which can be used in all subsequent stages of request processing. Also catches errors (throw **DbException** or InternalException), rolls back and completes transactions.
+
+To use, specify intersection:
+
+```typescript
+@UseInterceptors(TransactionInterceptor)
+```
+
+To get a manager object, use the decorator in a controller arguments:
+
+```typescript
+async updateFruit(
+		@Body() body:FruitDto,
+		@TransactionManager() entityManager: EntityManager,
+	) {
+		return await this.fruitService.getFruit(entityManager,body);
+	}
+```
 
 ## Validate property with TypeORM
 

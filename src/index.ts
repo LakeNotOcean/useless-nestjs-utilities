@@ -1,9 +1,11 @@
 // contextValidation
-export * from 'src/contextValidation/Exists.interceptor';
-export * from 'src/contextValidation/NotExists.interceptor';
 export * from 'src/contextValidation/checkContext.interceptor';
 export * from 'src/contextValidation/context.aware.dto';
 export * from 'src/contextValidation/context.interceptor';
+
+// typeORM validation
+export * from 'src/contextValidation/typeORMValidation/ExistsValidation.interceptor';
+export * from 'src/contextValidation/typeORMValidation/ValidationContextOptions';
 
 // exceptions
 export * from 'src/exceptions/Enums';

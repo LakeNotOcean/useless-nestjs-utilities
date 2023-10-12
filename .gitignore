@@ -4,4 +4,4 @@ vscode
 package-lock.json
 tsconfig.tsbuildinfo
 src/fruitModule
-src/test
+src/test*

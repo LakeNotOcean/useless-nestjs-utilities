@@ -1,68 +1,73 @@
 import {
-  CallHandler,
-  ExecutionContext,
-  HttpException,
-  Injectable,
-  NestInterceptor,
+	CallHandler,
+	ExecutionContext,
+	HttpException,
+	Injectable,
+	NestInterceptor,
 } from '@nestjs/common';
 import { Observable, catchError, finalize, tap } from 'rxjs';
 import { QUERY_RUNNER_CONTEXT } from 'src/constants';
 import { Exception } from 'src/exceptions/base.exceptions';
 import { InternalException } from 'src/exceptions/server.exceptions';
-import { DataSource, QueryRunner } from 'typeorm';
+import { DataSource, QueryFailedError, QueryRunner } from 'typeorm';
 import { DbException } from './db.exception';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
-  constructor(private readonly dataSource: DataSource) {}
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<any>> {
-    const req = context.switchToHttp().getRequest();
-    const queryRunner: QueryRunner = await this.dbInit();
+	constructor(private readonly dataSource: DataSource) {}
+	async intercept(
+		context: ExecutionContext,
+		next: CallHandler,
+	): Promise<Observable<any>> {
+		const req = context.switchToHttp().getRequest();
+		const queryRunner: QueryRunner = await this.dbInit();
 
-    req[QUERY_RUNNER_CONTEXT] = queryRunner.manager;
+		req[QUERY_RUNNER_CONTEXT] = queryRunner.manager;
 
-    return next.handle().pipe(
-      catchError(async error => {
-        if (queryRunner.isTransactionActive) {
-          await queryRunner.rollbackTransaction();
-        }
-        if (!queryRunner.isReleased) {
-          await queryRunner.release();
-        }
+		return next.handle().pipe(
+			catchError(async (error) => {
+				if (queryRunner.isTransactionActive) {
+					await queryRunner.rollbackTransaction();
+				}
+				if (!queryRunner.isReleased) {
+					await queryRunner.release();
+				}
 
-        if (error instanceof Exception || error instanceof HttpException) {
-          throw error;
-        }
-        if (error?.code) {
-          throw new DbException(error);
-        }
-        throw new InternalException(error);
-      }),
-      tap(async () => {
-        if (queryRunner.isTransactionActive) {
-          await queryRunner.rollbackTransaction();
-        }
-        if (!queryRunner.isReleased) {
-          await queryRunner.release();
-        }
-      }),
-      finalize(async () => {
-        if (queryRunner.isTransactionActive) {
-          await queryRunner.rollbackTransaction();
-        }
-        if (!queryRunner.isReleased) {
-          await queryRunner.release();
-        }
-      }),
-    );
-  }
+				if (error instanceof Exception || error instanceof HttpException) {
+					throw error;
+				}
+				if (queryFailedGuard(error)) {
+					throw new DbException(error);
+				}
+				throw new InternalException(error);
+			}),
+			tap(async () => {
+				if (queryRunner.isTransactionActive) {
+					await queryRunner.rollbackTransaction();
+				}
+				if (!queryRunner.isReleased) {
+					await queryRunner.release();
+				}
+			}),
+			finalize(async () => {
+				if (queryRunner.isTransactionActive) {
+					await queryRunner.rollbackTransaction();
+				}
+				if (!queryRunner.isReleased) {
+					await queryRunner.release();
+				}
+			}),
+		);
+	}
 
-  private async dbInit(): Promise<QueryRunner> {
-    const queryRunner = this.dataSource.createQueryRunner();
+	private async dbInit(): Promise<QueryRunner> {
+		const queryRunner = this.dataSource.createQueryRunner();
 
-    return queryRunner;
-  }
+		return queryRunner;
+	}
 }
+
+const queryFailedGuard = (
+	err: any,
+): err is QueryFailedError & { code: string } =>
+	err instanceof QueryFailedError;

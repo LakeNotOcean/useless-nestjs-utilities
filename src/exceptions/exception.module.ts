@@ -63,7 +63,8 @@ const typesMap = new Map<string, number>()
 	.set(ExceptionTypeEnum.NotFound, 404)
 	.set(ExceptionTypeEnum.Business, 422)
 	.set(ExceptionTypeEnum.Client, 400)
-	.set(ExceptionTypeEnum.Server, 500);
+	.set(ExceptionTypeEnum.Server, 500)
+	.set(ExceptionTypeEnum.ExternalException, 502);
 
 @Catch(Exception)
 export class GlobalExceptionsFilter implements ExceptionFilter {

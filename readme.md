@@ -199,13 +199,21 @@ For example, validate the entire context with **ContextValidationInteceptor**:
 
 ### Validation with TypeORM
 
-To validate a context using TypeORM, you need to use an intersection injherited from **ContextTransactionInteceptor**, for example build-in **ExistValidationInteceptor**:
+To validate a context using TypeORM, you need to use an intersection injherited from **ContextTransactionInteceptor** and **ValidationContextOptions**, for example build-in **ExistValidationInteceptor**:
 
 ```typescript
 @UseInterceptors(
 		ContextInterceptor<FruitUpdateBodyDto, FruitQueryDto>,
 		ExistValidationInteceptor<FruitEntity, FruitUpdateBodyDto, FruitQueryDto>,
 	)
+@ValidationContextOptions<FruitEntity, FruitUpdateBodyDto, object>({
+		entity: FruitEntity,
+		isExist: true,
+		findOptions: { weight: 'body.weight' },
+		exceptionThrowFunction: () => {
+			throw Exception;
+		},
+	})
 ```
 
 ## License

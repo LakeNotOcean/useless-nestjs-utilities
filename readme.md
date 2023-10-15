@@ -18,6 +18,7 @@ The package provides a module for error handling - **ExceptionsModule**. How it 
 - `ClientException` has code 400
 - `ServerException` has code 500
 - `BussinessException` has code 422
+- `ExternalException` has code 502
 
 First of all set a **BaseInterceptor** when starting the application to catch all IternalExeptions:
 
@@ -95,13 +96,13 @@ export class TranslateException extends BusinessException {
 		i18n: string,
 		readonly args: object,
 	) {
-		super(OpResult.translateError, i18n);
+		super([OperationsResults['translateException']], i18n);
 	}
 }
 //for exeptions after translating, can be processed by another formatter
 export class TranslatedException extends BusinessException {
 	constructor(message: string) {
-		super(OpResult.translateError, message);
+		super([OperationsResults['translatedException']], message);
 	}
 }
 ```
@@ -111,6 +112,10 @@ And all you have to do is throw an exception in the right place:
 ```typescript
 throw new TranslateException('userAlreadyExists', {});
 ```
+
+### Operations results
+
+Exceptions take **BaseOperationsResultsType** as the first parameter, and **ExceptionPayload** as the second, which must have a required message property. The library has **BaseOperationsResults** of the type BaseOperationsResultsType as an example.
 
 ## Transaction manager
 
@@ -154,7 +159,7 @@ WARNING: only use select query.
 
 ### Validation without TypeORM
 
-To validate the entire request you can **ContextInterceptor** to set the persistence of the request body and query parameters. For example:
+To validate the entire request you can use **ContextInterceptor** to set the persistence of the request body and query parameters. For example:
 
 ```typescript
 @UseInterceptors(
@@ -192,9 +197,16 @@ For example, validate the entire context with **ContextValidationInteceptor**:
 	)
 ```
 
-### Validation without TypeORM
+### Validation with TypeORM
 
-TODO
+To validate a context using TypeORM, you need to use an intersection injherited from **ContextTransactionInteceptor**, for example build-in **ExistValidationInteceptor**:
+
+```typescript
+@UseInterceptors(
+		ContextInterceptor<FruitUpdateBodyDto, FruitQueryDto>,
+		ExistValidationInteceptor<FruitEntity, FruitUpdateBodyDto, FruitQueryDto>,
+	)
+```
 
 ## License
 

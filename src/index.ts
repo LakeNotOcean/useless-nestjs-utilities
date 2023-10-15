@@ -9,6 +9,7 @@ export * from 'src/contextValidation/typeORMValidation/ValidationContextOptions'
 
 // exceptions
 export * from 'src/exceptions/Enums';
+export * from 'src/exceptions/OperationsResult';
 export * from 'src/exceptions/base.exceptions';
 export * from 'src/exceptions/baseFormatter.exception';
 export * from 'src/exceptions/exception.module';
@@ -30,3 +31,6 @@ export * from 'src/typeORMInterceptors/transaction.interceptor';
 export * from 'src/types/context.types';
 export * from 'src/types/orm.types';
 export * from 'src/types/types';
+
+//constants
+export * from 'src/index';

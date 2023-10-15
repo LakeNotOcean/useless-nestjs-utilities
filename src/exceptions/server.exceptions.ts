@@ -1,10 +1,10 @@
-import { OperationsResults } from './OperationsResult';
+import { BaseOperationsResults } from './OperationsResult';
 import { ServerException } from './base.exceptions';
 
 export class InternalException extends ServerException {
 	constructor(error: any) {
 		super(
-			OperationsResults['dbException'],
+			BaseOperationsResults['dbException'],
 			{ message: 'iternal exception' },
 			{
 				errorCode: error?.code,

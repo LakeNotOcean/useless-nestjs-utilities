@@ -1,10 +1,10 @@
-import { OperationsResults } from 'src/exceptions/OperationsResult';
+import { BaseOperationsResults } from 'src/exceptions/OperationsResult';
 import { ServerException } from '../exceptions/base.exceptions';
 
 export class DbException extends ServerException {
 	constructor(error: any) {
 		super(
-			OperationsResults['dbException'],
+			BaseOperationsResults['dbException'],
 			{ message: 'db exception' },
 			createNewDbErrorString(error),
 		);

@@ -1,5 +1,5 @@
 import { ValidationError } from 'class-validator';
-import { OperationsResults } from './OperationsResult';
+import { BaseOperationsResults } from './OperationsResult';
 import { ClientException } from './base.exceptions';
 
 export interface RequestValidationError {
@@ -16,7 +16,7 @@ const mapError = (error: ValidationError): RequestValidationError => ({
 
 export class ValidationException extends ClientException {
 	constructor(errors: ValidationError[]) {
-		super(OperationsResults['validationException'], {
+		super(BaseOperationsResults['validationException'], {
 			message: 'Validation failed',
 			inner: errors.map(mapError),
 		});

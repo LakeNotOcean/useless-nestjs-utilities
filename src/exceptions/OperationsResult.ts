@@ -1,4 +1,4 @@
-export const OperationsResults: OperationsResultsType = {
+export const BaseOperationsResults: BaseOperationsResultsType = {
 	errorInCode: {
 		id: 0,
 		description: 'error in code',
@@ -18,6 +18,6 @@ export type OperationResultType = {
 	description: string;
 };
 
-export type OperationsResultsType = {
+export type BaseOperationsResultsType = {
 	[P in string]?: OperationResultType;
 };

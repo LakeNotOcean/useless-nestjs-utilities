@@ -6,7 +6,7 @@ Library for NestJS, that includes mechanisms for handling exceptions, decorators
 
 ## Installation
 
-SOON)))
+`npm i useless_nestjs_utilities`
 
 ## Handling exceptions
 

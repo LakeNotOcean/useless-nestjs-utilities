@@ -1,5 +1,5 @@
 {
-	"name": "useless_nestjs_utilities",
+	"name": "@useless/useless_nestjs_utilities",
 	"version": "1.0.4",
 	"description": "Useless decorators, validators for  NestJS and TopeORM",
 	"main": "dist/index.js",

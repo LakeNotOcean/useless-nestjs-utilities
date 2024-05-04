@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { EMPTY, Observable, throwError } from 'rxjs';
+import { FORMATTERS_OPTIONS } from 'src/constants';
 import { ExceptionTypeEnum } from './Enums';
 import { Exception } from './base.exceptions';
 import {
@@ -31,7 +32,7 @@ export class ExceptionsModule {
 					useClass: GlobalExceptionsFilter,
 				},
 				{
-					provide: 'FORMATTERS_OPTIONS',
+					provide: FORMATTERS_OPTIONS,
 					useValue: options,
 				},
 			],
@@ -48,7 +49,7 @@ export class ExceptionsModule {
 					useFactory: undefined,
 				},
 				{
-					provide: 'FORMATTERS_OPTIONS',
+					provide: FORMATTERS_OPTIONS,
 					useFactory: options.useFactory,
 					inject: options.inject,
 				},
@@ -72,8 +73,8 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
 	private readonly formatters: IExceptionsFormatter[];
 	private readonly baseFormatter = new BaseExceptionFomratter();
 	constructor(
-		@Inject('FORMATTERS_OPTIONS')
-		private readonly options: ExceptionsModuleOptions,
+		@Inject(FORMATTERS_OPTIONS)
+		options: ExceptionsModuleOptions,
 	) {
 		this.formatters = options?.formatters || [];
 		if (this.formatters.length < 1) {

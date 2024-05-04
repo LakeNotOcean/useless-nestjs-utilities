@@ -16,7 +16,7 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
 	protected runnerManager: EntityManager;
 	protected entity: EntityTarget<T>;
 	protected columnName: keyof T;
-	protected exceptionThrowFunc?: (value: any) => never;
+	protected exceptionThrowFunc?: (value: string | number | symbol) => never;
 
 	constructor(readonly dataSource: DataSource) {
 		this.runnerManager = dataSource.createQueryRunner().manager;
@@ -26,7 +26,7 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
 			validationArguments.constraints as [
 				EntityTarget<T>,
 				keyof T,
-				(value: any) => never,
+				(value: string | number | symbol) => never,
 			];
 		if (!columnName) {
 			throw new ValidationParamsException({
@@ -43,7 +43,7 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
 		this.columnName = columnName;
 	}
 	abstract validate(
-		value: any,
+		value: string | number | symbol,
 		validationArguments?: ValidationArguments,
 	): boolean | Promise<boolean>;
 }

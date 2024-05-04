@@ -12,7 +12,7 @@ export function BaseDbCheckDecorator<T extends ObjectLiteral>(
 	entity: EntityTarget<T>,
 	columnName: keyof T,
 	constraints: any[],
-	exceptionThrowFunc?: (value: any) => never,
+	exceptionThrowFunc?: (value: string | number | symbol) => never,
 	validationOptions?: ValidationOptions,
 ) {
 	return function (object: object, propertyName: string) {

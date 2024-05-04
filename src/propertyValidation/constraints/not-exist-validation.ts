@@ -10,7 +10,7 @@ export class NotExistsValidation<
 		super(dataSource);
 	}
 	async validate(
-		value: any,
+		value: string | number | symbol,
 		validationArguments: ValidationArguments,
 	): Promise<boolean> {
 		this.setDbParams(validationArguments);

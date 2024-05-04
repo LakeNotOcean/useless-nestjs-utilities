@@ -33,8 +33,8 @@ export class ExistValidationInteceptor<
 	}
 	async intercept(
 		context: ExecutionContext,
-		next: CallHandler<any>,
-	): Promise<Observable<any>> {
+		next: CallHandler<unknown>,
+	): Promise<Observable<unknown>> {
 		this.setContext(context);
 		this.setFromMetadata(context);
 		const findParams = getFindOptionsWhere<Entity, Body, Query>(

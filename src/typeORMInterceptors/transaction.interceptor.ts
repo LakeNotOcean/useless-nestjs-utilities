@@ -12,13 +12,14 @@ import { InternalException } from 'src/exceptions/server.exceptions';
 import { DataSource, QueryFailedError, QueryRunner } from 'typeorm';
 import { DbException } from './db.exception';
 
+// initializing a connection to the database from the connection pool when receiving a request
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
 	constructor(private readonly dataSource: DataSource) {}
 	async intercept(
 		context: ExecutionContext,
 		next: CallHandler,
-	): Promise<Observable<any>> {
+	): Promise<Observable<unknown>> {
 		const req = context.switchToHttp().getRequest();
 		const queryRunner: QueryRunner = await this.dbInit();
 
@@ -68,6 +69,6 @@ export class TransactionInterceptor implements NestInterceptor {
 }
 
 const queryFailedGuard = (
-	err: any,
+	err: unknown,
 ): err is QueryFailedError & { code: string } =>
 	err instanceof QueryFailedError;

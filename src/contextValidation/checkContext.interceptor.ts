@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { contextBodyQuery, contextMapping } from 'src/types/context.types';
-import { getObjectByPath } from 'src/types/types';
+import { getObjectByPath } from '..';
+import { contextBodyQuery, contextMapping } from '../types';
 import { ContextInterceptor } from './context.interceptor';
 
 @Injectable()

@@ -1,0 +1,17 @@
+# ignore src
+
+src/
+
+# ignore dev dependencies
+
+.eslintrc.js
+.gitignore
+node_modules/
+.prettierrc
+package-lock.json
+tsconfig*
+
+# ignore test
+
+dist/fruitModule/
+dist/test*

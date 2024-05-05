@@ -6,10 +6,9 @@ import {
 	NestInterceptor,
 } from '@nestjs/common';
 import { Observable, catchError, finalize, tap } from 'rxjs';
-import { QUERY_RUNNER_CONTEXT } from 'src/constants';
-import { Exception } from 'src/exceptions/base.exceptions';
-import { InternalException } from 'src/exceptions/server.exceptions';
 import { DataSource, QueryFailedError, QueryRunner } from 'typeorm';
+import { Exception, InternalException } from '../exceptions';
+import { QUERY_RUNNER_CONTEXT } from '../lib-constants';
 import { DbException } from './db.exception';
 
 // initializing a connection to the database from the connection pool when receiving a request

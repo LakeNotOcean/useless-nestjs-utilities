@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { EMPTY, Observable, throwError } from 'rxjs';
-import { FORMATTERS_OPTIONS } from 'src/constants';
+import { FORMATTERS_OPTIONS } from '../lib-constants';
 import { ExceptionTypeEnum } from './Enums';
 import { Exception } from './base.exceptions';
 import {

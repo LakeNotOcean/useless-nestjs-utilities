@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
-import { rawFindOptions } from 'src/types/orm.types';
 import { EntityTarget } from 'typeorm';
+import { rawFindOptions } from '../..';
 
 export const VALIDATION_CONTEXT_OPTIONS = 'validation_context_options';
 

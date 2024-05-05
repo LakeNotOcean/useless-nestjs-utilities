@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { QUERY_RUNNER_CONTEXT } from 'src/constants';
 import { EntityManager } from 'typeorm';
+import { QUERY_RUNNER_CONTEXT } from '../lib-constants';
 
 export const TransactionManager = createParamDecorator(
 	(data: unknown, ctx: ExecutionContext) => {

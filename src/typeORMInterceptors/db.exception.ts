@@ -1,4 +1,4 @@
-import { BaseOperationsResults } from 'src/exceptions/OperationsResult';
+import { BaseOperationsResults } from '../exceptions';
 import { ServerException } from '../exceptions/base.exceptions';
 
 export class DbException extends ServerException {

@@ -2,13 +2,13 @@ import {
 	ValidationArguments,
 	ValidatorConstraintInterface,
 } from 'class-validator';
-import { ValidationParamsException } from 'src/exceptions/server.exceptions';
 import {
 	DataSource,
 	EntityManager,
 	EntityTarget,
 	ObjectLiteral,
 } from 'typeorm';
+import { ValidationParamsException } from '../../exceptions';
 
 export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
 	implements ValidatorConstraintInterface

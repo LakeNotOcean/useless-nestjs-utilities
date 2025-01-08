@@ -13,5 +13,4 @@ tsconfig*
 
 # ignore test
 
-dist/fruitModule/
 dist/test*

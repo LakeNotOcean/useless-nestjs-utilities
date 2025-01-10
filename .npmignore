@@ -13,4 +13,4 @@ tsconfig*
 
 # ignore test
 
-dist/test*
+dist/tests*

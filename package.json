@@ -1,6 +1,6 @@
 {
 	"name": "useless_nestjs_utilities",
-	"version": "3.1.0",
+	"version": "3.1.1",
 	"description": "Useless decorators, validators for  NestJS and TopeORM",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

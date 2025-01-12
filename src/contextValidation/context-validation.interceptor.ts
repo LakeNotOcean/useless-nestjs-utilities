@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { getObjectByPath } from '..';
-import { contextBodyQuery, contextMapping } from '../types';
+import { ContextBodyQuery, ContextMapping } from '../types';
 import { ContextInterceptor } from './context.interceptor';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class ContextValidationInteceptor<
 	Query extends object,
 > extends ContextInterceptor<Body, Query> {
 	constructor(
-		private contextOptions: contextMapping<Body, Query>[],
+		private contextOptions: ContextMapping<Body, Query>[],
 		private compFunc: (...args: unknown[]) => void,
 	) {
 		super();
@@ -22,8 +22,8 @@ export class ContextValidationInteceptor<
 		this.setContext(context);
 		this.compFunc(
 			...this.contextOptions.map((option) =>
-				getObjectByPath<contextBodyQuery<Body, Query>>(
-					this.context as contextBodyQuery<Body, Query>,
+				getObjectByPath<ContextBodyQuery<Body, Query>>(
+					this.context as ContextBodyQuery<Body, Query>,
 					option,
 				),
 			),

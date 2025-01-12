@@ -2,7 +2,7 @@ import { CallHandler, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { DataSource } from 'typeorm';
-import { contextBodyQuery, getFindOptionsWhere } from '../../types';
+import { ContextBodyQuery, getFindOptionsWhere } from '../../types';
 import { ContextTransactionInteceptor } from '../context.interceptor';
 import {
 	VALIDATION_CONTEXT_OPTIONS,
@@ -38,7 +38,7 @@ export class ExistValidationInteceptor<
 		this.setFromMetadata(context);
 		const findParams = getFindOptionsWhere<Entity, Body, Query>(
 			this.metadata.findOptions,
-			this.context as contextBodyQuery<Body, Query>,
+			this.context as ContextBodyQuery<Body, Query>,
 		);
 		const runnerManager = this.dataSource.createQueryRunner().manager;
 		const isExist = await runnerManager.exists(this.metadata.entity, {

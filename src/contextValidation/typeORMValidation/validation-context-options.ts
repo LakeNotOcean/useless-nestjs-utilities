@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 import { EntityTarget } from 'typeorm';
-import { rawFindOptions } from '../..';
+import { RawFindOptions } from '../..';
 
 export const VALIDATION_CONTEXT_OPTIONS = 'validation_context_options';
 
@@ -10,7 +10,7 @@ export const ValidationContextOptions = <Entity extends object, Body, Query>(
 
 export type ValidationContext<Entity extends object, Body, Query> = {
 	entity: EntityTarget<Entity>;
-	findOptions: rawFindOptions<Entity, Body, Query>;
+	findOptions: RawFindOptions<Entity, Body, Query>;
 	isExist: boolean;
 	throwException: () => never;
 };

@@ -19,55 +19,48 @@ export class TransactionInterceptor implements NestInterceptor {
 		context: ExecutionContext,
 		next: CallHandler,
 	): Promise<Observable<unknown>> {
-		const req = context.switchToHttp().getRequest();
+		const request = context.switchToHttp().getRequest();
 		const queryRunner: QueryRunner = await this.dbInit();
 
-		req[QUERY_RUNNER_CONTEXT] = queryRunner.manager;
+		request[QUERY_RUNNER_CONTEXT] = queryRunner.manager;
 
 		return next.handle().pipe(
 			catchError(async (error) => {
-				if (queryRunner.isTransactionActive) {
-					await queryRunner.rollbackTransaction();
-				}
-				if (!queryRunner.isReleased) {
-					await queryRunner.release();
-				}
+				await finishTransaction(queryRunner);
 
 				if (error instanceof Exception || error instanceof HttpException) {
 					throw error;
 				}
-				if (queryFailedGuard(error)) {
-					throw new DbException(error);
+				if (isQueryFailedGuard(error)) {
+					throw new DbException({ ...error, errorCode: error.code });
 				}
 				throw new InternalException(error);
 			}),
 			tap(async () => {
-				if (queryRunner.isTransactionActive) {
-					await queryRunner.rollbackTransaction();
-				}
-				if (!queryRunner.isReleased) {
-					await queryRunner.release();
-				}
+				await finishTransaction(queryRunner);
 			}),
 			finalize(async () => {
-				if (queryRunner.isTransactionActive) {
-					await queryRunner.rollbackTransaction();
-				}
-				if (!queryRunner.isReleased) {
-					await queryRunner.release();
-				}
+				await finishTransaction(queryRunner);
 			}),
 		);
 	}
 
 	private async dbInit(): Promise<QueryRunner> {
-		const queryRunner = this.dataSource.createQueryRunner();
-
-		return queryRunner;
+		return this.dataSource.createQueryRunner();
 	}
 }
 
-const queryFailedGuard = (
+function isQueryFailedGuard(
 	err: unknown,
-): err is QueryFailedError & { code: string } =>
-	err instanceof QueryFailedError;
+): err is QueryFailedError & { code: string } {
+	return err instanceof QueryFailedError;
+}
+
+async function finishTransaction(queryRunner: QueryRunner) {
+	if (queryRunner.isTransactionActive) {
+		await queryRunner.rollbackTransaction();
+	}
+	if (!queryRunner.isReleased) {
+		await queryRunner.release();
+	}
+}

@@ -1,19 +1,12 @@
-import { BaseOperationResults } from '../exceptions';
+import { baseOperationResults, ErrorInfo } from '../exceptions';
 import { ServerException } from '../exceptions/base/base-exceptions';
 
-export class DbException extends ServerException {
-	constructor(error: any) {
+export class DbException<T extends ErrorInfo> extends ServerException {
+	constructor(errorInfo: T) {
 		super(
-			BaseOperationResults['dbException'],
+			baseOperationResults.dbException,
 			{ message: 'db exception' },
-			createNewDbErrorString(error),
+			errorInfo,
 		);
 	}
 }
-export const createNewDbErrorString = (error: any) => {
-	return {
-		errorCode: error?.code,
-		errorDetail: error?.detail,
-		errorMessage: error?.message,
-	};
-};

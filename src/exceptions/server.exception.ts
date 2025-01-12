@@ -7,11 +7,7 @@ export class InternalException<T extends ErrorInfo> extends ServerException {
 		super(
 			baseOperationResults.errorInCode,
 			{ message: 'internal exception' },
-			{
-				errorCode: errorInfo?.errorCode,
-				errorMessage: errorInfo?.errorMessage,
-				errorDetail: errorInfo?.errorDetail,
-			},
+			errorInfo,
 		);
 	}
 }

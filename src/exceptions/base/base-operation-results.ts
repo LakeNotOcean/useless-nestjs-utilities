@@ -1,4 +1,4 @@
-import { OperationResult } from '../types/operation-result.type';
+import { OperationResult } from './types/operation-result.type';
 
 export type BaseOperationResults =
 	| 'dbException'

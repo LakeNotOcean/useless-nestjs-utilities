@@ -1,6 +1,6 @@
 import { ServerException } from './base/base-exceptions';
 import { baseOperationResults } from './base/base-operation-results';
-import { ErrorInfo } from './types/error-info.type';
+import { ErrorInfo } from './base/types/error-info.type';
 
 export class InternalException<T extends ErrorInfo> extends ServerException {
 	constructor(errorInfo: T) {

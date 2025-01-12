@@ -1,7 +1,7 @@
 import { ValidationOptions } from 'class-validator';
 import { EntityTarget, ObjectLiteral } from 'typeorm';
-import { BaseDbCheckDecorator } from './base.decorator';
-import { ExistsValidation } from './constraints/exist-validation';
+import { ExistsValidation } from '../constraints/exist-validation';
+import { BaseDbCheck } from './base-db-check.decorator';
 
 export function IsExistsDb<T extends ObjectLiteral>(
 	entity: EntityTarget<T>,
@@ -9,7 +9,7 @@ export function IsExistsDb<T extends ObjectLiteral>(
 	exceptionThrowFunc?: (value: any) => never,
 	validationOptions?: ValidationOptions,
 ) {
-	return BaseDbCheckDecorator(
+	return BaseDbCheck(
 		ExistsValidation<T>,
 		entity,
 		columnName,

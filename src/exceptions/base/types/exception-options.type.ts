@@ -1,5 +1,5 @@
 import { FactoryProvider, ModuleMetadata } from '@nestjs/common';
-import { ExceptionsFormatterInterface } from '../base/base-exception-formatter';
+import { ExceptionsFormatterInterface } from '../base-exception-formatter';
 
 export interface ExceptionsModuleOptions {
 	formatters: ExceptionsFormatterInterface[];

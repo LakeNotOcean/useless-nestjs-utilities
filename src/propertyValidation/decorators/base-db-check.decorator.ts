@@ -6,8 +6,8 @@ import {
 } from 'class-validator';
 import { EntityTarget, ObjectLiteral } from 'typeorm';
 
-export function BaseDbCheckDecorator<T extends ObjectLiteral>(
-	validator: Function | ValidatorConstraintInterface,
+export function BaseDbCheck<T extends ObjectLiteral>(
+	validator: object | ValidatorConstraintInterface,
 	entity: EntityTarget<T>,
 	columnName: keyof T,
 	constraints: any[],

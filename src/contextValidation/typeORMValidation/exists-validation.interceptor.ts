@@ -6,8 +6,8 @@ import { contextBodyQuery, getFindOptionsWhere } from '../../types';
 import { ContextTransactionInteceptor } from '../context.interceptor';
 import {
 	VALIDATION_CONTEXT_OPTIONS,
-	ValidationContextType,
-} from './validationContextOptions';
+	ValidationContext,
+} from './validation-context-options';
 
 @Injectable()
 export class ExistValidationInteceptor<
@@ -15,8 +15,8 @@ export class ExistValidationInteceptor<
 	Body extends object,
 	Query extends object,
 > extends ContextTransactionInteceptor<Body, Query> {
-	private metadata: ValidationContextType<Entity, Body, Query>;
-	private exceptionThrowFunction: () => never;
+	private metadata: ValidationContext<Entity, Body, Query>;
+	private throwException: () => never;
 
 	constructor(
 		readonly dataSource: DataSource,
@@ -45,7 +45,7 @@ export class ExistValidationInteceptor<
 			where: findParams,
 		});
 		if (isExist != this.metadata.isExist) {
-			return this.exceptionThrowFunction();
+			return this.throwException();
 		}
 		next.handle();
 	}

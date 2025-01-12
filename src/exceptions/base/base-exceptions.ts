@@ -1,6 +1,6 @@
 import { ExceptionType } from '../enum/exception-type.enum';
-import { ExceptionPayload } from '../types/exception-payload.type';
-import { OperationResult } from '../types/operation-result.type';
+import { ExceptionPayload } from './types/exception-payload.type';
+import { OperationResult } from './types/operation-result.type';
 
 export abstract class Exception {
 	abstract type: ExceptionType;

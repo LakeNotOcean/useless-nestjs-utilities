@@ -8,7 +8,7 @@ import {
 	EntityTarget,
 	ObjectLiteral,
 } from 'typeorm';
-import { ValidationParamsException } from '../../exceptions';
+import { ParamsException } from '../../exceptions/params.exception';
 
 export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
 	implements ValidatorConstraintInterface
@@ -29,13 +29,13 @@ export abstract class BaseDbCheckValidation<T extends ObjectLiteral>
 				(value: string | number | symbol) => never,
 			];
 		if (!columnName) {
-			throw new ValidationParamsException({
-				message: 'columnName is not provided',
+			throw new ParamsException({
+				errorMessage: 'columnName is not provided',
 			});
 		}
 		if (!entity) {
-			throw new ValidationParamsException({
-				message: 'entity is not provided',
+			throw new ParamsException({
+				errorMessage: 'entity is not provided',
 			});
 		}
 		this.entity = entity;

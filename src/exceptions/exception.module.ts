@@ -15,11 +15,11 @@ import {
 	ExceptionsFormatterInterface,
 } from './base/base-exception-formatter';
 import { Exception } from './base/base-exceptions';
-import { ExceptionType } from './enum/exception-type.enum';
 import {
 	ExceptionsModuleAsyncOptions,
 	ExceptionsModuleOptions,
-} from './types/exception-options.type';
+} from './base/types/exception-options.type';
+import { ExceptionType } from './enum/exception-type.enum';
 
 @Module({})
 export class ExceptionsModule {

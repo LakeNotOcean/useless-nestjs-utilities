@@ -152,7 +152,7 @@ export class FruitIdDto {
 }
 ```
 
-The library implements two decorators: **IsExistsDb** and **IsNotExistsDb**. You can implement other decorators in a similar way using **BaseDbCheckDecorator** and **BaseDbCheckValidation**.
+The library implements two decorators: **IsExistsDb** and **IsNotExistsDb**. You can implement other decorators in a similar way using **BaseDbCheck** and **BaseDbCheckValidation**.
 WARNING: only use select query.
 
 ## Context validation
@@ -210,7 +210,7 @@ To validate a context using TypeORM, you need to use an intersection injherited 
 		entity: FruitEntity,
 		isExist: true,
 		findOptions: { weight: 'body.weight' },
-		exceptionThrowFunction: () => {
+		throwException: () => {
 			throw Exception;
 		},
 	})

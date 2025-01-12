@@ -10,16 +10,16 @@ import {
 import { APP_FILTER } from '@nestjs/core';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { FORMATTERS_OPTIONS } from '../lib-constants';
-import { ExceptionTypeEnum } from './Enums';
-import { Exception } from './base.exceptions';
 import {
-	BaseExceptionFomratter,
-	IExceptionsFormatter,
-} from './baseFormatter.exception';
+	BaseExceptionFormatter,
+	ExceptionsFormatterInterface,
+} from './base/base-exception-formatter';
+import { Exception } from './base/base-exceptions';
+import { ExceptionType } from './enum/exception-type.enum';
 import {
 	ExceptionsModuleAsyncOptions,
 	ExceptionsModuleOptions,
-} from './exceptionOptions.type';
+} from './types/exception-options.type';
 
 @Module({})
 export class ExceptionsModule {
@@ -59,19 +59,19 @@ export class ExceptionsModule {
 }
 
 const typesMap = new Map<string, number>()
-	.set(ExceptionTypeEnum.Authentication, 401)
-	.set(ExceptionTypeEnum.Authorization, 403)
-	.set(ExceptionTypeEnum.NotFound, 404)
-	.set(ExceptionTypeEnum.Business, 422)
-	.set(ExceptionTypeEnum.Client, 400)
-	.set(ExceptionTypeEnum.Server, 500)
-	.set(ExceptionTypeEnum.ExternalException, 502);
+	.set(ExceptionType.Authentication, 401)
+	.set(ExceptionType.Authorization, 403)
+	.set(ExceptionType.NotFound, 404)
+	.set(ExceptionType.Business, 422)
+	.set(ExceptionType.Client, 400)
+	.set(ExceptionType.Server, 500)
+	.set(ExceptionType.ExternalException, 502);
 
 @Catch(Exception)
 export class GlobalExceptionsFilter implements ExceptionFilter {
 	private readonly logger = new Logger('ERROR');
-	private readonly formatters: IExceptionsFormatter[];
-	private readonly baseFormatter = new BaseExceptionFomratter();
+	private readonly formatters: ExceptionsFormatterInterface[];
+	private readonly baseFormatter = new BaseExceptionFormatter();
 	constructor(
 		@Inject(FORMATTERS_OPTIONS)
 		options: ExceptionsModuleOptions,
@@ -82,7 +82,10 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
 		}
 	}
 
-	catch(exception: Exception, argumentsHost: ArgumentsHost): Observable<any> {
+	catch(
+		exception: Exception,
+		argumentsHost: ArgumentsHost,
+	): Observable<unknown> {
 		this.logger.error(exception);
 		const formatter = this.formatters.find((x) => x.match(argumentsHost));
 		const payload =

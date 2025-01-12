@@ -11,7 +11,7 @@ export class ContextValidationInteceptor<
 > extends ContextInterceptor<Body, Query> {
 	constructor(
 		private contextOptions: contextMapping<Body, Query>[],
-		private compFunc: (...args: any[]) => void,
+		private compFunc: (...args: unknown[]) => void,
 	) {
 		super();
 	}

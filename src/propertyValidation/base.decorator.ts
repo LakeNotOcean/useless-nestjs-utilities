@@ -7,7 +7,6 @@ import {
 import { EntityTarget, ObjectLiteral } from 'typeorm';
 
 export function BaseDbCheckDecorator<T extends ObjectLiteral>(
-	// eslint-disable-next-line @typescript-eslint/ban-types
 	validator: Function | ValidatorConstraintInterface,
 	entity: EntityTarget<T>,
 	columnName: keyof T,

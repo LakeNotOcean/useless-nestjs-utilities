@@ -115,7 +115,7 @@ throw new TranslateException('userAlreadyExists', {});
 
 ### Operations results
 
-Exceptions take **BaseOperationsResultsType** as the first parameter, and **ExceptionPayload** as the second, which must have a required message property. The library has **BaseOperationsResults** of the type BaseOperationsResultsType as an example.
+Exceptions take **BaseOperationResultsType** as the first parameter, and **ExceptionPayload** as the second, which must have a required message property. The library has **BaseOperationResults** of the type BaseOperationResultsType as an example.
 
 ## Transaction manager
 

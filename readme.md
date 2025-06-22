@@ -17,7 +17,7 @@ The package provides a module for error handling - **ExceptionsModule**. How it 
 - `NotFoundException` has code 404
 - `ClientException` has code 400
 - `ServerException` has code 500
-- `BussinessException` has code 422
+- `BisnessException` has code 422
 - `ExternalException` has code 502
 
 First of all set a **BaseInterceptor** when starting the application to catch all IternalExeptions:

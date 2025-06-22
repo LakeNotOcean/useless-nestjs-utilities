@@ -20,15 +20,6 @@ The package provides a module for error handling - **ExceptionsModule**. How it 
 - `BisnessException` has code 422
 - `ExternalException` has code 502
 
-First of all set a **BaseInterceptor** when starting the application to catch all IternalExeptions:
-
-```typescript
-app.useGlobalInterceptors(
-	new ClassSerializerInterceptor(app.get(Reflector)),
-	new BaseInterceptor(),
-);
-```
-
 To handle exceptions correctly, import the module, synchronously or asynchronously, using **formatters** as needed:
 
 Example of use without formatters:
@@ -115,11 +106,11 @@ throw new TranslateException('userAlreadyExists', {});
 
 ### Operations results
 
-Exceptions take **BaseOperationResultsType** as the first parameter, and **ExceptionPayload** as the second, which must have a required message property. The library has **BaseOperationResults** of the type BaseOperationResultsType as an example.
+Exceptions take **OperationResult** as the first parameter, and **ExceptionPayload** as the second, which must have a required message property. The library has **baseOperationResults** of the type OperationResult as an example.
 
 ## Transaction manager
 
-**TransactionIterceptor** creates an EntityManager object from [TypeORM](https://www.npmjs.com/package/typeorm), which can be used in all subsequent stages of request processing. Also catches errors (throw **DbException** or InternalException), rolls back and completes transactions.
+**TransactionInterceptor** creates an EntityManager object from [TypeORM](https://www.npmjs.com/package/typeorm), which can be used in all subsequent stages of request processing. Also catches errors (throw **DbException** or InternalException), rolls back and completes transactions.
 
 To use, specify intersection:
 
